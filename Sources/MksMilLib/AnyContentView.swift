@@ -10,26 +10,56 @@ import SwiftUI
 @available(iOS 15.0, *)
 public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View {
     
-    var sourceContent: [SelectableContent]
-    @State var identableContent: [(SelectableContent, Int)] = []
+    public var sourceContent: [SelectableContent]
+    @State public var identableContent: [(SelectableContent, Int)] = []
     
-    @Binding var selectedContent: [SelectableContent]
-    @State var selectedCases: [(SelectableContent,Int)] = []
-    @State var allCases: [(SelectableContent,Int)] = []
+    @Binding public var selectedContent: [SelectableContent]
+    @State public var selectedCases: [(SelectableContent,Int)] = []
+    @State public var allCases: [(SelectableContent,Int)] = []
     
-    @State var editMode: Bool = false
+    @State public var editMode: Bool
     
-    @State private var totalHeight = CGFloat.zero
+    @State private var totalHeight: Double = .zero
     
-    @ViewBuilder var backgroundView: () -> B
-    @ViewBuilder var cellView: (SelectableContent) -> T
+    @ViewBuilder public var backgroundView: () -> B
+    @ViewBuilder public var cellView: (SelectableContent) -> T
     
-    var horizontalPadding: Double = 4
-    var verticalPadding: Double = 4
-    var promptPlaceholder: String = "Make you choise"
-    var freezePosition: Bool = true
+    public var horizontalPadding: Double
+    public var verticalPadding: Double
+    public var promptPlaceholder: String
+    public var freezePosition: Bool
     
     @Namespace var tagPositionNameSpace
+    
+//    public init(
+//        sourceContent: [SelectableContent] = [],
+//        identableContent: [(SelectableContent, Int)] = [],
+//        selectedContent: Binding<[SelectableContent]> ,
+//        selectedCases: [(SelectableContent, Int)] = [],
+//        allCases: [(SelectableContent, Int)],
+//        editMode: Bool = false,
+//        totalHeight: CGFloat = CGFloat.zero,
+//        backgroundView: @escaping () -> B,
+//        cellView: @escaping (SelectableContent) -> T,
+//        horizontalPadding: Double = 4,
+//        verticalPadding: Double = 4,
+//        promptPlaceholder: String = "Make you choise",
+//        freezePosition: Bool = true
+//    ) {
+//        self.sourceContent = sourceContent
+//        self.identableContent = identableContent
+//        self._selectedContent = selectedContent
+//        self.selectedCases = selectedCases
+//        self.allCases = allCases
+//        self.editMode = editMode
+//        self.totalHeight = totalHeight
+//        self.backgroundView = backgroundView
+//        self.cellView = cellView
+//        self.horizontalPadding = horizontalPadding
+//        self.verticalPadding = verticalPadding
+//        self.promptPlaceholder = promptPlaceholder
+//        self.freezePosition = freezePosition
+//    }
     
     public var body: some View {
         VStack{
