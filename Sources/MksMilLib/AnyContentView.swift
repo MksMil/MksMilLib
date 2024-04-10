@@ -11,43 +11,36 @@ import SwiftUI
 public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View {
     
     public var sourceContent: [SelectableContent]
-    @State public var identableContent: [(SelectableContent, Int)] = []
+    @State private var identableContent: [(SelectableContent, Int)] = []
     
     @Binding public var selectedContent: [SelectableContent]
-    @State public var selectedCases: [(SelectableContent,Int)] = []
+    @State private var selectedCases: [(SelectableContent,Int)] = []
     @State public var allCases: [(SelectableContent,Int)] = []
     
-    @State public var editMode: Bool
+    @State private var editMode: Bool = false
     
-    @State public var totalHeight: Double = .zero
+    @State private var totalHeight: Double = .zero
     
     @ViewBuilder public var backgroundView: () -> B
     @ViewBuilder public var cellView: (SelectableContent) -> T
     
-    public var horizontalPadding: Double
-    public var verticalPadding: Double
-    public var promptPlaceholder: String
-    public var freezePosition: Bool
+    public var horizontalPadding: Double = 4
+    public var verticalPadding: Double = 4
+    public var promptPlaceholder: String = "Make choise  "
+    public var freezePosition: Bool = true
     
     @Namespace var tagPositionNameSpace
     
 
     
-    public init(sourceContent: [SelectableContent], identableContent: [(SelectableContent, Int)], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)], allCases: [(SelectableContent, Int)], editMode: Bool,totalHeight: Double, backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, horizontalPadding: Double, verticalPadding: Double, promptPlaceholder: String, freezePosition: Bool) {
+    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)], allCases: [(SelectableContent, Int)], backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T) {
         self.sourceContent = sourceContent
-        self.identableContent = identableContent
         self._selectedContent = selectedContent
         self.selectedCases = selectedCases
         self.allCases = allCases
-        self.editMode = editMode
-        self.totalHeight = totalHeight
+        
         self.backgroundView = backgroundView
         self.cellView = cellView
-        self.horizontalPadding = horizontalPadding
-        self.verticalPadding = verticalPadding
-        self.promptPlaceholder = promptPlaceholder
-        self.freezePosition = freezePosition
-        
     }
     
     public var body: some View {
