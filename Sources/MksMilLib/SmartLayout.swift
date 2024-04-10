@@ -11,7 +11,7 @@ import SwiftUI
 @available(iOS 16.0, *)
 public struct SmartLayout: Layout{
     
-    public init(hSpacing: Double, vSpacing: Double) {
+    public init(hSpacing: Double = 5, vSpacing: Double = 5) {
         self.hSpacing = hSpacing
         self.vSpacing = vSpacing
     }
@@ -20,7 +20,7 @@ public struct SmartLayout: Layout{
     var vSpacing: Double
     
     public func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        guard !subviews.isEmpty else { return proposal.replacingUnspecifiedDimensions() }
+        guard !subviews.isEmpty else { return CGSize.zero }
         let totalWidth = proposal.width ?? proposal.replacingUnspecifiedDimensions().width
         var width = Double.zero
         var height = subviews.isEmpty ? 0: subviews[0].sizeThatFits(.unspecified).height
@@ -58,6 +58,7 @@ public struct SmartLayout: Layout{
     }
     
     public func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        guard !subviews.isEmpty else { return }
         var point = bounds.origin
         let maxX = bounds.width + bounds.origin.x
         var maxAddedHeight = Double.zero
