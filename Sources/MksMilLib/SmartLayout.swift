@@ -11,6 +11,11 @@ import SwiftUI
 @available(iOS 16.0, *)
 public struct SmartLayout: Layout{
     
+    public init(hSpacing: Double, vSpacing: Double) {
+        self.hSpacing = hSpacing
+        self.vSpacing = vSpacing
+    }
+    
     var hSpacing: Double
     var vSpacing: Double
     
