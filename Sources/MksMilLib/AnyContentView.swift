@@ -33,7 +33,7 @@ public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View 
     
 
     
-    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)], allCases: [(SelectableContent, Int)], backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T) {
+    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)] = [], allCases: [(SelectableContent, Int)] = [], backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T) {
         self.sourceContent = sourceContent
         self._selectedContent = selectedContent
         self.selectedCases = selectedCases
