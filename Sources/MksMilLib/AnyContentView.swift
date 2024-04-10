@@ -31,14 +31,14 @@ public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View 
     
     @Namespace var tagPositionNameSpace
     
-    init(sourceContent: [SelectableContent], identableContent: [(SelectableContent, Int)], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)], allCases: [(SelectableContent, Int)], editMode: Bool, totalHeight: Double, backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, horizontalPadding: Double, verticalPadding: Double, promptPlaceholder: String, freezePosition: Bool) {
+    public init(sourceContent: [SelectableContent], identableContent: [(SelectableContent, Int)], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)], allCases: [(SelectableContent, Int)], editMode: Bool, backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, horizontalPadding: Double, verticalPadding: Double, promptPlaceholder: String, freezePosition: Bool) {
         self.sourceContent = sourceContent
         self.identableContent = identableContent
         self._selectedContent = selectedContent
         self.selectedCases = selectedCases
         self.allCases = allCases
         self.editMode = editMode
-        self.totalHeight = totalHeight
+//        self.totalHeight = totalHeight
         self.backgroundView = backgroundView
         self.cellView = cellView
         self.horizontalPadding = horizontalPadding
