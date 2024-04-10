@@ -31,35 +31,22 @@ public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View 
     
     @Namespace var tagPositionNameSpace
     
-//    public init(
-//        sourceContent: [SelectableContent] = [],
-//        identableContent: [(SelectableContent, Int)] = [],
-//        selectedContent: Binding<[SelectableContent]> ,
-//        selectedCases: [(SelectableContent, Int)] = [],
-//        allCases: [(SelectableContent, Int)],
-//        editMode: Bool = false,
-//        totalHeight: CGFloat = CGFloat.zero,
-//        backgroundView: @escaping () -> B,
-//        cellView: @escaping (SelectableContent) -> T,
-//        horizontalPadding: Double = 4,
-//        verticalPadding: Double = 4,
-//        promptPlaceholder: String = "Make you choise",
-//        freezePosition: Bool = true
-//    ) {
-//        self.sourceContent = sourceContent
-//        self.identableContent = identableContent
-//        self._selectedContent = selectedContent
-//        self.selectedCases = selectedCases
-//        self.allCases = allCases
-//        self.editMode = editMode
-//        self.totalHeight = totalHeight
-//        self.backgroundView = backgroundView
-//        self.cellView = cellView
-//        self.horizontalPadding = horizontalPadding
-//        self.verticalPadding = verticalPadding
-//        self.promptPlaceholder = promptPlaceholder
-//        self.freezePosition = freezePosition
-//    }
+    init(sourceContent: [SelectableContent], identableContent: [(SelectableContent, Int)], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)], allCases: [(SelectableContent, Int)], editMode: Bool, totalHeight: Double, backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, horizontalPadding: Double, verticalPadding: Double, promptPlaceholder: String, freezePosition: Bool) {
+        self.sourceContent = sourceContent
+        self.identableContent = identableContent
+        self._selectedContent = selectedContent
+        self.selectedCases = selectedCases
+        self.allCases = allCases
+        self.editMode = editMode
+        self.totalHeight = totalHeight
+        self.backgroundView = backgroundView
+        self.cellView = cellView
+        self.horizontalPadding = horizontalPadding
+        self.verticalPadding = verticalPadding
+        self.promptPlaceholder = promptPlaceholder
+        self.freezePosition = freezePosition
+        
+    }
     
     public var body: some View {
         VStack{
