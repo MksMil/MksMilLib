@@ -8,7 +8,7 @@
 import SwiftUI
 
 @available(iOS 15.0, *)
-public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View {
+public struct AnyContentView<T: View,B:View,But: View, SelectableContent: Hashable>: View {
     
     public var sourceContent: [SelectableContent]
     @State private var identableContent: [(SelectableContent, Int)] = []
@@ -23,6 +23,7 @@ public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View 
     
     @ViewBuilder public var backgroundView: () -> B
     @ViewBuilder public var cellView: (SelectableContent) -> T
+    @ViewBuilder public var buttonView: () -> But
     
     public var horizontalPadding: Double = 4
     public var verticalPadding: Double = 4
@@ -33,7 +34,7 @@ public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View 
     
 
     
-    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)] = [], allCases: [(SelectableContent, Int)] = [], backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T) {
+    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)] = [], allCases: [(SelectableContent, Int)] = [], backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, buttonView: @escaping ()->But) {
         self.sourceContent = sourceContent
         self._selectedContent = selectedContent
         self.selectedCases = selectedCases
@@ -41,6 +42,7 @@ public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View 
         
         self.backgroundView = backgroundView
         self.cellView = cellView
+        self.buttonView = buttonView
     }
     
     public var body: some View {
@@ -79,7 +81,6 @@ public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View 
                                     }
                                     return result
                                 })
-                                .opacity(isSelected(element: allCases[index]) ? 1 : 0.5)
                                 .onTapGesture {
                                     withAnimation {
                                         if editMode{
@@ -112,13 +113,7 @@ public struct AnyContentView<T: View,B:View, SelectableContent: Hashable>: View 
                     selectedContent = selectedCases.map { $0.0 }
                 }
             }, label: {
-                Text(editMode ? "Done":"Edit")
-                    .fixedSize()
-                    .padding(5)
-                    .padding(.horizontal,40)
-                    .background {
-                        RoundedRectangle(cornerRadius: 8).fill(.ultraThickMaterial)
-                    }
+               buttonView()
             })
         }
         .onAppear {
