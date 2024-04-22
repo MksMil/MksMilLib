@@ -18,7 +18,7 @@ public struct Concavable: ViewModifier{
         content
             .scaleEffect(isSelected ? 0.98: 1)
             .background {
-                if isSelected {
+                if !isSelected {
                     ZStack {
                         RoundedRectangle(cornerRadius: cornerRadius)
                             .fill(mainColor)
