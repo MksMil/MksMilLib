@@ -8,7 +8,7 @@
 import SwiftUI
 
 @available(iOS 15.0, *)
-public struct AnyContentView<T: View,B:View,But: View, SelectableContent: Hashable>: View {
+public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableContent: Hashable>: View {
     
     public var sourceContent: [SelectableContent]
     @State private var identableContent: [(SelectableContent, Int)] = []
@@ -24,6 +24,7 @@ public struct AnyContentView<T: View,B:View,But: View, SelectableContent: Hashab
     @ViewBuilder public var backgroundView: () -> B
     @ViewBuilder public var cellView: (SelectableContent) -> T
     @ViewBuilder public var buttonView: () -> But
+    @ViewBuilder public var promptView: () -> Prompt
     
     public var horizontalPadding: Double = 4
     public var verticalPadding: Double = 4
@@ -34,7 +35,7 @@ public struct AnyContentView<T: View,B:View,But: View, SelectableContent: Hashab
     
 
     
-    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)] = [], allCases: [(SelectableContent, Int)] = [], backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, buttonView: @escaping ()->But) {
+    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)] = [], allCases: [(SelectableContent, Int)] = [], backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, buttonView: @escaping ()->But, promptView: @escaping ()->Prompt) {
         self.sourceContent = sourceContent
         self._selectedContent = selectedContent
         self.selectedCases = selectedCases
@@ -43,6 +44,7 @@ public struct AnyContentView<T: View,B:View,But: View, SelectableContent: Hashab
         self.backgroundView = backgroundView
         self.cellView = cellView
         self.buttonView = buttonView
+        self.promptView = promptView
     }
     
     public var body: some View {
@@ -52,7 +54,7 @@ public struct AnyContentView<T: View,B:View,But: View, SelectableContent: Hashab
                     var width = Double.zero
                     var height = Double.zero
                     ZStack(alignment: .topLeading) {
-                        Text(promptPlaceholder)
+                        promptView()
                             .opacity((selectedCases.isEmpty && !editMode) ? 1 : 0)
                         
                         ForEach(allCases.indices, id: \.self) { index in
@@ -108,9 +110,11 @@ public struct AnyContentView<T: View,B:View,But: View, SelectableContent: Hashab
             
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.2)){
-                    editMode.toggle()
                     allCases = editMode ? identableContent : filteredContent()
 //                    selectedContent = selectedCases.map { $0.0 }
+                }
+                withAnimation(.easeInOut(duration: 0.4)){
+                    editMode.toggle()
                 }
             }, label: {
                buttonView()
