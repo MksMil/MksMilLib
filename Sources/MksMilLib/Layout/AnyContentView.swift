@@ -98,8 +98,10 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
                             Color.clear.preference(key: AnyContentViewSizePreferenceKey.self, value: geometry.size)
                         }
                     }
-                    .onPreferenceChange(AnyContentViewSizePreferenceKey.self, perform: {
-                        self.totalHeight = $0.height
+                    .onPreferenceChange(AnyContentViewSizePreferenceKey.self, perform: { val in
+                            withAnimation(.easeInOut(duration: editMode ? 0.2: 0.4)) {
+                                self.totalHeight = val.height
+                            }
                     })
                 }
             }
@@ -110,12 +112,10 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
             }
             
             Button(action: {
-                withAnimation(.easeInOut(duration: 0.4)){
+                withAnimation(.easeInOut(duration: editMode ? 0.2: 0.4)){
                     editMode.toggle()
-                }
-                withAnimation(.easeInOut(duration: 0.2)){
                     allCases = editMode ? identableContent : filteredContent()
-//                    selectedContent = selectedCases.map { $0.0 }
+                    selectedContent = selectedCases.map { $0.0 }
                 }
             }, label: {
                buttonView()
