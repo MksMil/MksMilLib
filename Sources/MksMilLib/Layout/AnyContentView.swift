@@ -17,7 +17,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
     @State private var selectedCases: [(SelectableContent,Int)] = []
     @State public var allCases: [(SelectableContent,Int)] = []
     
-    @State private var editMode: Bool = false
+    @Binding private var editMode: Bool
     
     @State private var totalHeight: Double = .zero
     
@@ -35,11 +35,12 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
     
 
     
-    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)] = [], allCases: [(SelectableContent, Int)] = [], backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, buttonView: @escaping ()->But, promptView: @escaping ()->Prompt) {
+    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)] = [], allCases: [(SelectableContent, Int)] = [],editMode: Binding<Bool>, backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, buttonView: @escaping ()->But, promptView: @escaping ()->Prompt) {
         self.sourceContent = sourceContent
         self._selectedContent = selectedContent
         self.selectedCases = selectedCases
         self.allCases = allCases
+        self._editMode = editMode
         
         self.backgroundView = backgroundView
         self.cellView = cellView
