@@ -110,7 +110,7 @@ public struct AnyContentView<T: View,B:View,But: View, SelectableContent: Hashab
                 withAnimation(.easeInOut(duration: 0.2)){
                     editMode.toggle()
                     allCases = editMode ? identableContent : filteredContent()
-                    selectedContent = selectedCases.map { $0.0 }
+//                    selectedContent = selectedCases.map { $0.0 }
                 }
             }, label: {
                buttonView()
@@ -148,8 +148,10 @@ public struct AnyContentView<T: View,B:View,But: View, SelectableContent: Hashab
             selectedCases.removeAll { el in
                 el == element
             }
+            selectedContent = selectedCases.map { $0.0 }
         } else {
             self.selectedCases.append(element)
+            selectedContent = selectedCases.map { $0.0 }
         }
     }
 }
