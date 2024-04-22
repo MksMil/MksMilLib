@@ -109,12 +109,12 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
             }
             
             Button(action: {
+                withAnimation(.easeInOut(duration: 0.4)){
+                    editMode.toggle()
+                }
                 withAnimation(.easeInOut(duration: 0.2)){
                     allCases = editMode ? identableContent : filteredContent()
 //                    selectedContent = selectedCases.map { $0.0 }
-                }
-                withAnimation(.easeInOut(duration: 0.4)){
-                    editMode.toggle()
                 }
             }, label: {
                buttonView()
