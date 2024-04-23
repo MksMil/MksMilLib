@@ -1,10 +1,3 @@
-//
-//  GenericTagView.swift
-//  MMTagView
-//
-//  Created by Миляев Максим on 08.04.2024.
-//
-
 import SwiftUI
 
 @available(iOS 15.0, *)
@@ -32,9 +25,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
     public var freezePosition: Bool = true
     
     @Namespace var tagPositionNameSpace
-    
-
-    
+ 
     public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)] = [], allCases: [(SelectableContent, Int)] = [],isEdit: Binding<Bool>, backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, buttonView: @escaping ()->But, promptView: @escaping ()->Prompt) {
         self.sourceContent = sourceContent
         self._selectedContent = selectedContent
@@ -50,73 +41,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
     
     public var body: some View {
         VStack{
-            VStack {
-                GeometryReader { g in
-                    var width = Double.zero
-                    var height = Double.zero
-                    ZStack(alignment: .topLeading) {
-                        promptView()
-                            .opacity((selectedCases.isEmpty && !isEdit) ? 1 : 0)
-                        
-                        ForEach(allCases.indices, id: \.self) { index in
-                            cellView(allCases[index].0)
-                                .id(allCases[index].1)
-                                .padding(.horizontal, horizontalPadding)
-                                .padding(.vertical, verticalPadding)
-                                .matchedGeometryEffect(id:allCases[index].1, in: tagPositionNameSpace)
-                                .alignmentGuide(.leading, computeValue: { d in
-                                    if (abs(width - d.width) > g.size.width) {
-                                        width = 0
-                                        height -= d.height
-                                    }
-                                    let result = width
-                                    if allCases[index].1 == allCases.last!.1 {
-                                        width = 0 //last item
-                                    } else {
-                                        width -= d.width
-                                    }
-                                    return result
-                                })
-                                .alignmentGuide(.top, computeValue: {d in
-                                    let result = height
-                                    if allCases[index].1 ==  allCases.last!.1 {
-                                        height = 0 // last item
-                                    }
-                                    return result
-                                })
-                                .onTapGesture {
-                                    withAnimation {
-                                        if isEdit{
-                                            tap(element: allCases[index])
-                                        } else {
-                                            changeEditState()
-                                        }
-                                    }
-                                }
-                        }
-                    }
-                    .background {
-                        GeometryReader { geometry in
-                            Color.clear.preference(key: AnyContentViewSizePreferenceKey.self, value: geometry.size)
-                        }
-                    }
-                    .onPreferenceChange(AnyContentViewSizePreferenceKey.self, perform: { val in
-                            withAnimation(.easeInOut(duration: isEdit ? 0.15: 0.3)) {
-                                self.totalHeight = val.height
-                            }
-                    })
-                }
-            }
-            .frame(height: totalHeight)
-            .padding()
-            .background {
-                backgroundView()
-            }
-            .onTapGesture {
-                if !isEdit{
-                    changeEditState()
-                }
-            }
+           makeContent()
             
             if isEdit{
                 Button(action: {
@@ -129,6 +54,78 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
         .onAppear {
             for (index, element) in sourceContent.enumerated(){
                 identableContent.append((element, index))
+            }
+        }
+    }
+    
+    @ViewBuilder func makeContent() -> some View{
+        VStack {
+            GeometryReader { g in
+                var width = Double.zero
+                var height = Double.zero
+                ZStack(alignment: .topLeading) {
+                    promptView()
+                        .opacity((selectedCases.isEmpty && !isEdit) ? 1 : 0)
+                    
+                    ForEach(allCases.indices, id: \.self) { index in
+                        cellView(allCases[index].0)
+                            .id(allCases[index].1)
+                            .padding(.horizontal, horizontalPadding)
+                            .padding(.vertical, verticalPadding)
+                            .matchedGeometryEffect(id:allCases[index].1, in: tagPositionNameSpace)
+                            .alignmentGuide(.leading, computeValue: { d in
+                                if (abs(width - d.width) > g.size.width) {
+                                    width = 0
+                                    height -= d.height
+                                }
+                                let result = width
+                                if allCases[index].1 == allCases.last!.1 {
+                                    width = 0 //last item
+                                } else {
+                                    width -= d.width
+                                }
+                                return result
+                            })
+                            .alignmentGuide(.top, computeValue: {d in
+                                let result = height
+                                if allCases[index].1 ==  allCases.last!.1 {
+                                    height = 0 // last item
+                                }
+                                return result
+                            })
+                            .onTapGesture {
+                                withAnimation {
+                                    if isEdit{
+                                        tap(element: allCases[index])
+                                    } else {
+                                        changeEditState()
+                                    }
+                                }
+                            }
+                            
+                    }
+                    
+                }
+                .background {
+                    GeometryReader { geometry in
+                        Color.clear.preference(key: AnyContentViewSizePreferenceKey.self, value: geometry.size)
+                    }
+                }
+                .onPreferenceChange(AnyContentViewSizePreferenceKey.self, perform: { val in
+                        withAnimation(.easeInOut(duration: isEdit ? 0.15: 0.3)) {
+                            self.totalHeight = val.height
+                        }
+                })
+            }
+        }
+        .frame(height: totalHeight)
+        .padding()
+        .background {
+            backgroundView()
+        }
+        .onTapGesture {
+            if !isEdit{
+                changeEditState()
             }
         }
     }
