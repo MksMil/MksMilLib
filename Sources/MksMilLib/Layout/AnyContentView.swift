@@ -99,7 +99,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
                         }
                     }
                     .onPreferenceChange(AnyContentViewSizePreferenceKey.self, perform: { val in
-                            withAnimation(.easeInOut(duration: editMode ? 0.3: 0.5)) {
+                            withAnimation(.easeInOut(duration: editMode ? 0.15: 0.3)) {
                                 self.totalHeight = val.height
                             }
                     })
@@ -112,7 +112,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
             }
             
             Button(action: {
-                withAnimation(.easeInOut(duration: editMode ? 0.3: 0.5)){
+                withAnimation(.easeInOut(duration: editMode ? 0.15: 0.3)){
                     editMode.toggle()
                     allCases = editMode ? identableContent : filteredContent()
                     selectedContent = selectedCases.map { $0.0 }
