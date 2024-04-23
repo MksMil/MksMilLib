@@ -88,6 +88,8 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
                                     withAnimation {
                                         if isEdit{
                                             tap(element: allCases[index])
+                                        } else {
+                                            changeEditState()
                                         }
                                     }
                                 }
@@ -112,21 +114,13 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
             }
             .onTapGesture {
                 if !isEdit{
-                    withAnimation(.easeInOut(duration: 0.3)){
-                        isEdit = true
-                        allCases = isEdit ? identableContent : filteredContent()
-                        selectedContent = selectedCases.map { $0.0 }
-                    }
+                    changeEditState()
                 }
             }
             
             if isEdit{
                 Button(action: {
-                    withAnimation(.easeInOut(duration: isEdit ? 0.15: 0.3)){
-                        isEdit.toggle()
-                        allCases = isEdit ? identableContent : filteredContent()
-                        selectedContent = selectedCases.map { $0.0 }
-                    }
+                    changeEditState()
                 }, label: {
                     buttonView()
                 })
@@ -156,6 +150,15 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
         }
     }
     
+    // MARK: - Change state to edit
+    func changeEditState(){
+        withAnimation(.easeInOut(duration: isEdit ? 0.15: 0.3)){
+            isEdit.toggle()
+            allCases = isEdit ? identableContent : filteredContent()
+            selectedContent = selectedCases.map { $0.0 }
+        }
+    }
+    
     // MARK: - selection handler
     private func tap(element: (SelectableContent,Int)){
         if selectedCases.contains(where: { el in
@@ -172,9 +175,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
     }
 }
 
-//#Preview {
-//    ContentView()
-//}
+
 
 // MARK: - size preference key
 
