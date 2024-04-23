@@ -17,7 +17,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
     @State private var selectedCases: [(SelectableContent,Int)] = []
     @State public var allCases: [(SelectableContent,Int)] = []
     
-    @Binding private var editMode: Bool
+    @Binding private var isEdit: Bool
     
     @State private var totalHeight: Double = .zero
     
@@ -35,12 +35,12 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
     
 
     
-    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)] = [], allCases: [(SelectableContent, Int)] = [],editMode: Binding<Bool>, backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, buttonView: @escaping ()->But, promptView: @escaping ()->Prompt) {
+    public init(sourceContent: [SelectableContent], selectedContent: Binding<[SelectableContent]>, selectedCases: [(SelectableContent, Int)] = [], allCases: [(SelectableContent, Int)] = [],isEdit: Binding<Bool>, backgroundView: @escaping () -> B, cellView: @escaping (SelectableContent) -> T, buttonView: @escaping ()->But, promptView: @escaping ()->Prompt) {
         self.sourceContent = sourceContent
         self._selectedContent = selectedContent
         self.selectedCases = selectedCases
         self.allCases = allCases
-        self._editMode = editMode
+        self._isEdit = isEdit
         
         self.backgroundView = backgroundView
         self.cellView = cellView
@@ -56,7 +56,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
                     var height = Double.zero
                     ZStack(alignment: .topLeading) {
                         promptView()
-                            .opacity((selectedCases.isEmpty && !editMode) ? 1 : 0)
+                            .opacity((selectedCases.isEmpty && !isEdit) ? 1 : 0)
                         
                         ForEach(allCases.indices, id: \.self) { index in
                             cellView(allCases[index].0)
@@ -86,7 +86,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
                                 })
                                 .onTapGesture {
                                     withAnimation {
-                                        if editMode{
+                                        if isEdit{
                                             tap(element: allCases[index])
                                         }
                                     }
@@ -99,7 +99,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
                         }
                     }
                     .onPreferenceChange(AnyContentViewSizePreferenceKey.self, perform: { val in
-                            withAnimation(.easeInOut(duration: editMode ? 0.15: 0.3)) {
+                            withAnimation(.easeInOut(duration: isEdit ? 0.15: 0.3)) {
                                 self.totalHeight = val.height
                             }
                     })
@@ -111,19 +111,30 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
                 backgroundView()
             }
             
-            Button(action: {
-                withAnimation(.easeInOut(duration: editMode ? 0.15: 0.3)){
-                    editMode.toggle()
-                    allCases = editMode ? identableContent : filteredContent()
-                    selectedContent = selectedCases.map { $0.0 }
-                }
-            }, label: {
-               buttonView()
-            })
+            if isEdit{
+                Button(action: {
+                    withAnimation(.easeInOut(duration: isEdit ? 0.15: 0.3)){
+                        isEdit.toggle()
+                        allCases = isEdit ? identableContent : filteredContent()
+                        selectedContent = selectedCases.map { $0.0 }
+                    }
+                }, label: {
+                    buttonView()
+                })
+            }
         }
         .onAppear {
             for (index, element) in sourceContent.enumerated(){
                 identableContent.append((element, index))
+            }
+        }
+        .onTapGesture {
+            if !isEdit{
+                withAnimation(.easeInOut(duration: isEdit ? 0.15: 0.3)){
+                    isEdit.toggle()
+                    allCases = isEdit ? identableContent : filteredContent()
+                    selectedContent = selectedCases.map { $0.0 }
+                }
             }
         }
     }
