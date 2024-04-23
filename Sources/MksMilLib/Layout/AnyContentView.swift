@@ -110,6 +110,15 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
             .background {
                 backgroundView()
             }
+            .onTapGesture {
+                if !isEdit{
+                    withAnimation(.easeInOut(duration: 0.3)){
+                        isEdit = true
+                        allCases = isEdit ? identableContent : filteredContent()
+                        selectedContent = selectedCases.map { $0.0 }
+                    }
+                }
+            }
             
             if isEdit{
                 Button(action: {
@@ -126,15 +135,6 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
         .onAppear {
             for (index, element) in sourceContent.enumerated(){
                 identableContent.append((element, index))
-            }
-        }
-        .onTapGesture {
-            if !isEdit{
-                withAnimation(.easeInOut(duration: isEdit ? 0.15: 0.3)){
-                    isEdit.toggle()
-                    allCases = isEdit ? identableContent : filteredContent()
-                    selectedContent = selectedCases.map { $0.0 }
-                }
             }
         }
     }
