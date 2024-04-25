@@ -58,7 +58,7 @@ public struct SmartLayout: Layout{
                     // if last
                     height += size.height + vSpacing
                 } else {
-                    width = size.width
+                    width = size.width + hSpacing
                     maxAddedHeight = size.height
                     height += maxAddedHeight + vSpacing
                     print("maxAddedHeight: \(maxAddedHeight)")
