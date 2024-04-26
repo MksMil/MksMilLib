@@ -72,7 +72,10 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
                             .id(allCases[index].1)
                             .padding(.horizontal, horizontalPadding)
                             .padding(.vertical, verticalPadding)
-                            .matchedGeometryEffect(id:allCases[index].1, in: tagPositionNameSpace, isSource: true)
+                            .matchedGeometryEffect(id:allCases[index].1, 
+                                                   in: tagPositionNameSpace,
+                                                   properties: [.position, .frame],
+                                                   isSource: true)
                             .alignmentGuide(.leading, computeValue: { d in
                                 if (abs(width - d.width) > g.size.width) {
                                     width = 0
