@@ -72,7 +72,7 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
                             .id(allCases[index].1)
                             .padding(.horizontal, horizontalPadding)
                             .padding(.vertical, verticalPadding)
-                            .matchedGeometryEffect(id:allCases[index].1, in: tagPositionNameSpace)
+                            .matchedGeometryEffect(id:allCases[index].1, in: tagPositionNameSpace, isSource: true)
                             .alignmentGuide(.leading, computeValue: { d in
                                 if (abs(width - d.width) > g.size.width) {
                                     width = 0
@@ -149,8 +149,8 @@ public struct AnyContentView<T: View,B:View,But: View,Prompt: View, SelectableCo
     
     // MARK: - Change state to edit
     func changeEditState(){
-        withAnimation(.easeInOut(duration: isEdit ? 0.15: 0.3)){
-            isEdit.toggle()
+        isEdit.toggle()
+        withAnimation(.easeInOut(duration: !isEdit ? 0.15: 0.3)){
             allCases = isEdit ? identableContent : filteredContent()
             selectedContent = selectedCases.map { $0.0 }
         }
